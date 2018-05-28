@@ -11,28 +11,35 @@
 		    	<div class="form-group col-md-6">
 			    	<label for="selectCongreg">Congregation :</label>
 					<select name="congreg" class="form-control" id="selectCongreg">
-						<option value="Europe">Europe</option>
-						<option value="Elorn">Elorn</option>
-						<option value="Universite">Université</option>
-						<option value="Iroise">Iroise</option>
+					<option  disabled="disabled" selected="true">Selectionner la congrégation...</option>
+					<?php
+						$query="SELECT * FROM congregation";
+						$result = $conn->query($query);
+						while($row = $result->fetch_assoc())
+							{
+						      echo "<option value=$row[id]>$row[nom]</option>";
+							}
+					?>
 					</select>
 			    </div>
-			    <div class="form-group col-md-6">
+			    <div class="form-group col-md-6" id="choix_territoire" style="display: none">
 			    	<label for="selectTerritoire">Territoire : </label>
 			    	<select name="territoire" class="form-control" id="selectTerritoire">
-						<option value="1">1</option>
-						<option value="2">2</option>
-						<option value="3">3</option>
-						<option value="4">4</option>
 			    	</select>
 
 			    </div>
 			</div>
 	    	
-			<input type="submit" value="Valider">
 	   </form>
+	   
 	</div>
 </div>
+<div class="row">
+	<div class="col">
+		<div id="result"></div>
+	</div>
+</div>
+
 
 <?php
 
@@ -88,6 +95,7 @@ if(isset($_POST['territoire']))
     	echo "</div>";
 	echo "</div>";
 
+
 	//$result->data_seek(0);
 	while ($row = $result->fetch_assoc()) {
 		if($row['langue']!=="")
@@ -124,3 +132,31 @@ if(isset($_POST['territoire']))
 }
 
 ?>
+
+
+<script src="/js/jquery.js"></script>
+<script type="text/javascript">
+	$("#selectCongreg").change(function(){
+		
+		$id_congreg=$(this).val();
+
+		$("#choix_territoire").show();
+		
+		$.post("listeTerritoire.php",{id_congreg:$id_congreg},function(data){
+				$("#selectTerritoire").html('<option  disabled="disabled" selected="true">Selectionner le territoire...</option>' + data);
+
+			}
+		);			
+	});
+
+	$("#selectTerritoire").change(function(){ 
+		
+		$id_congreg=$("#selectCongreg").val();
+		$id_territoire=$(this).val();
+
+		$.post("listeAdresses.php",{id_congreg:$id_congreg,id_territoire:$id_territoire},function(data){
+				$("#result").html(data);
+			}
+		);
+	});
+</script>

@@ -78,11 +78,6 @@
 
 	require_once("login.php");
 
-	$conn = new mysqli($hn, $un, $pw, $db);
-	$conn->set_charset("utf8");
-
-	if($conn->connect_error) die($conn->connect_error);
-
 	$territoire=$_POST['territoire'];
 	$congreg=$_POST['congreg'];
 
@@ -127,7 +122,7 @@
     		$y=$pdf->GetY();
     		$pdf->SetLineWidth(0.5);
     		$pdf->SetDrawColor(96,96,96);
-    		$pdf->Line($x,$y-3.3/$ratio,10,$y-3.3/$ratio);
+    		$pdf->Line($x,$y+3.3/$ratio,10+81/$ratio,$y+3.3/$ratio);
     		
     		$pdf->SetDrawColor(0,0,0);
     		$pdf->SetLineWidth(0.3);
@@ -141,6 +136,6 @@
 
 
 
-	$pdf->Output("D",$congreg . "_" . $territoire . "_" . $format . ".pdf");
+	$pdf->Output("I",$congreg . "_" . $territoire . "_" . $format . ".pdf");
 
 ?>

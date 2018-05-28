@@ -3,8 +3,6 @@
 
 require_once("login.php");
 
-$conn = new mysqli($hn, $un, $pw, $db);
-if($conn->connect_error) die($conn->connect_error);
 
 if(isset($_POST['rue']) & !isset($_POST['territoire'])) 
 {
@@ -14,6 +12,7 @@ if(isset($_POST['rue']) & !isset($_POST['territoire']))
 	$apt =get_post($conn, 'apt');
 	$interphone =get_post($conn, 'interphone');
 	$cp = get_post($conn, 'cp');
+	$rmq = get_post($conn, 'cp');
 	$ville =get_post($conn, 'ville');
 	$langue =get_post($conn, 'langue');
 
@@ -22,18 +21,29 @@ if(isset($_POST['rue']) & !isset($_POST['territoire']))
 	$api="https://maps.googleapis.com/maps/api/geocode/json?address=$address&sensor=false&key=$mapskey";
 	//echo $api;
 
-	$jsondata = get_object_vars(json_decode(file_get_contents($api)));
+	$arrContextOptions=array(
+	    "ssl"=>array(
+	        "verify_peer"=>false,
+	        "verify_peer_name"=>false,
+	    ),
+	);
+	$jsondata = get_object_vars(json_decode(file_get_contents($api,false,stream_context_create($arrContextOptions))));
 	$lat = $jsondata['results'][0]->geometry->location->lat;
 	$long = $jsondata['results'][0]->geometry->location->lng;
 
-	echo '<div class="row">';
-	echo "<div class='col'><h3>Choix du territoire</h3> latitude : $lat longitude : $long </div>";
-	echo '</div>';
+	$query="SELECT * FROM congregation";
+	$result = $conn->query($query);
 
-
-	echo '<div class="row">';
-		echo '<div id="map" class="col-md-6" style="width:400px;height:400px">chargement de la carte</div>';
 echo <<<EOT
+
+	<div class="row">
+	<div class='col'><h3>Choix du territoire</h3> latitude : $lat longitude : $long </div>
+	</div>
+
+
+	<div class="row">
+	<div id="map" class="col-md-6" style="width:400px;height:400px">chargement de la carte</div>
+
 
     <script>
 
@@ -68,10 +78,12 @@ echo <<<EOT
 		    <div class="form-group col-md-6">
 		    	<label for="congreg">Congregation :</label>
 				<select name="congreg" class="form-control" id="exampleFormControlSelect1">
-					<option value="Elorn">Elorn</option>
-					<option value="Europe">Europe</option>
-					<option value="Universite">Université</option>
-					<option value="Iroise">Iroise</option>
+EOT;
+							while($row = $result->fetch_assoc())
+							{
+						      echo "<option value=$row[nom]>$row[nom]</option>";
+							}
+echo <<<EOT
 				</select>
 		    </div>
 		 </div>
@@ -95,8 +107,6 @@ echo <<<EOT
 			<input type="submit" value="Valider">
 	    </form>
 	</div>
-
-
 EOT;
 
 }
@@ -120,10 +130,15 @@ elseif(isset($_POST['territoire']))
 	$result = $conn->query($query);
 
 	if(!$result) echo "<h1>ECHEC DE L'INSERTION : $query</h1><br>" . $conn->error . "<br><br>";
+	else
+		header('location:index.php?ajoutAdresse');
 
 }
 else
 {
+	$query="SELECT * FROM langue";
+	$result = $conn->query($query);
+
 	echo <<<EOT
 	<div class="row">
 		<div class="col"><h3>Création d'une adresse</h3></div>
@@ -131,12 +146,12 @@ else
 	<div class="row">				
 			<form action=" " method="post" class="col-md-12">
 				<div class="form-row">
-					<div class="form-group col-md-2">
+					<div class="form-group col-md-1">
 						<label for="numero">Numéro :</label>
 						<input type="text" class="form-control"  name="numero">
 					</div>
 
-					<div class="form-group col-md-4">
+					<div class="form-group col-md-5">
 						<label for="rue">Rue :</label>
 						<input type="text" class="form-control"  name="rue">
 					</div>
@@ -157,12 +172,12 @@ else
 				<div class="form-row">
 					<div class="form-group col-md-6">
 						<label for="cp">Code postal :</label>
-						<input type="text" class="form-control"  name="cp">
+						<input type="text" class="form-control"  name="cp" value="29200">
 					</div>
 
 					<div class="form-group col-md-6">
 						<label for="ville">Ville :</label>
-						<input type="text" class="form-control"  name="ville">
+						<input type="text" class="form-control"  name="ville" value="Brest">
 					</div>
 				</div>
 					
@@ -170,12 +185,13 @@ else
 					<div class="form-group col-md-6">
 						<label for="langue">Langue parlée:</label>
 						<select name="langue" class="form-control" id="exampleFormControlSelect1">
-						      <option value="">?</option>
-						      <option value="Arabe">Arabe</option>
-						      <option value="Espagnol">Espagnol</option>
-						      <option value="Mahorais">Mahorais</option>
-						      <option value="Russe">Russe</option>
-						      <option value="Malgache">Malgache</option>
+EOT;
+							while($row = $result->fetch_assoc())
+							{
+						      echo "<option value=$row[nom]>$row[nom]</option>";
+							}
+echo <<<EOT
+
 					    </select>
 					</div>
 				</div>
