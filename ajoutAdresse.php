@@ -1,3 +1,4 @@
+<script src="/js/jquery.js"></script>
 
 <?php
 
@@ -12,14 +13,15 @@ if(isset($_POST['rue']) & !isset($_POST['territoire']))
 	$apt =get_post($conn, 'apt');
 	$interphone =get_post($conn, 'interphone');
 	$cp = get_post($conn, 'cp');
-	$rmq = get_post($conn, 'cp');
+	$rmq = get_post($conn, 'rmq');
 	$ville =get_post($conn, 'ville');
-	$langue =get_post($conn, 'langue');
+	$id_groupe =get_post($conn, 'id_groupe');
+	$id_territoireGroupe =get_post($conn, 'id_territoireGroupe');
 
-	$url="https://maps.googleapis.com/maps/api/geocode/json?address=$numero+$rue+$cp+$ville&key=$mapskey";
+	//$url="https://maps.googleapis.com/maps/api/geocode/json?address=$numero+$rue+$cp+$ville&key=$mapskey";
 	$address=urlencode($numero." ".$rue." ".$cp." ".$ville);
 	$api="https://maps.googleapis.com/maps/api/geocode/json?address=$address&sensor=false&key=$mapskey";
-	//echo $api;
+	//echo $url;
 
 	$arrContextOptions=array(
 	    "ssl"=>array(
@@ -36,13 +38,14 @@ if(isset($_POST['rue']) & !isset($_POST['territoire']))
 
 echo <<<EOT
 
+
 	<div class="row">
 	<div class='col'><h3>Choix du territoire</h3> latitude : $lat longitude : $long </div>
 	</div>
 
 
 	<div class="row">
-	<div id="map" class="col-md-6" style="width:400px;height:400px">chargement de la carte</div>
+		<div id="map" class="col-md-6" style="width:400px;height:400px">chargement de la carte</div>
 
 
     <script>
@@ -56,7 +59,7 @@ echo <<<EOT
         });
 
         var ctaLayer = new google.maps.KmlLayer({
-          url: 'https://sites.google.com/site/jwlmbrest/jwlm.kml',
+          url: 'https://sites.google.com/site/jwlmbrest/jwlm3.kml',
           zoom: 1,
           map: map
         });
@@ -66,33 +69,41 @@ echo <<<EOT
     	zoom: 1,
     	map: map,
     	title: 'Adresse'
-  });
+  		});
 
       }
     </script>
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=$mapskey&callback=initMap">
     </script>
-	    <form action="" method="post" class="col-md-6">
+	
+	<form action="bdd/saveAddress.php" method="post" class="col-md-6">
 	    <div class="form-row">
 		    <div class="form-group col-md-6">
-		    	<label for="congreg">Congregation :</label>
-				<select name="congreg" class="form-control" id="exampleFormControlSelect1">
+			    	<label for="selectCongreg">Congregation :</label>
+					<select name="id_congreg" class="form-control" id="selectCongreg">
+					<option  disabled="disabled" selected="true">Selectionner la congrégation...</option>
 EOT;
-							while($row = $result->fetch_assoc())
+						$query="SELECT * FROM congregation";
+						$result = $conn->query($query);
+						while($row = $result->fetch_assoc())
 							{
-						      echo "<option value=$row[nom]>$row[nom]</option>";
+						      echo "<option value=$row[id]>$row[nom]</option>";
 							}
 echo <<<EOT
-				</select>
-		    </div>
-		 </div>
+					</select>
+			    </div>
+			</div>
+		<div class="form-row">
+			<div class="form-group col-md-6" id="choix_territoire" style="display: none">
+			    <label for="selectTerritoire">Territoire : </label>
+			    <select name="id_territoire" class="form-control" id="selectTerritoire">
+			    </select>
+			</div>
+		</div>
+		    
 		 <div class="form-row">
-		    <div class="form-group col-md-6">
-		    	<label for="territoire">Territoire : </label>
-		    	<input type="text" class="form-control" name="territoire">
-		    </div>
-	    	
+	
 	    	<input type="hidden" name="rue" value="$rue">
 			<input type="hidden" name="numero" value="$numero">
 			<input type="hidden" name="apt" value="$apt">
@@ -102,41 +113,18 @@ echo <<<EOT
 	        <input type="hidden" name="ville" value="$ville">
 	        <input type="hidden" name="lat" value="$lat">
 	        <input type="hidden" name="long" value="$long">
-	        <input type="hidden" name="langue" value="$langue">
+	        <input type="hidden" name="id_groupe" value="$id_groupe">
+	        <input type="hidden" name="id_territoireGroupe" value="$id_territoireGroupe">
+			<input type="submit" value="Valider" id="btnSubmit" style="display: none">
 		</div>
-			<input type="submit" value="Valider">
 	    </form>
 	</div>
 EOT;
 
 }
-elseif(isset($_POST['territoire']))
-{
-	echo "ENREGISTREMENT";
-	$rue=get_post($conn, 'rue');
-	$numero = get_post($conn, 'numero');
-	$apt =get_post($conn, 'apt');
-	$interphone =get_post($conn, 'interphone');
-	$rmq =get_post($conn, 'rmq');
-	$cp = get_post($conn, 'cp');
-	$ville =get_post($conn, 'ville');
-	$territoire =get_post($conn, 'territoire');
-	$congreg =get_post($conn, 'congreg');
-	$langue =get_post($conn, 'langue');
-	$lat =get_post($conn, 'lat');
-	$long =get_post($conn, 'long');
-
-	$query = "INSERT INTO adresse (rue, numero, apt, interphone, rmq, cp, ville,lat,longi,langue,congregation,territoire) VALUES ('$rue','$numero','$apt','$interphone','$rmq','$cp','$ville','$lat','$long','$langue','$congreg','$territoire')";
-	$result = $conn->query($query);
-
-	if(!$result) echo "<h1>ECHEC DE L'INSERTION : $query</h1><br>" . $conn->error . "<br><br>";
-	else
-		header('location:index.php?ajoutAdresse');
-
-}
 else
 {
-	$query="SELECT * FROM langue";
+	$query="SELECT * FROM groupe";
 	$result = $conn->query($query);
 
 	echo <<<EOT
@@ -152,7 +140,7 @@ else
 					</div>
 
 					<div class="form-group col-md-5">
-						<label for="rue">Rue :</label>
+						<label for="rue">Voie :</label>
 						<input type="text" class="form-control"  name="rue">
 					</div>
 					<div class="form-group col-md-2">			
@@ -160,7 +148,7 @@ else
 						<input type="text" class="form-control"  name="interphone">
 					</div>
 					<div class="form-group col-md-2">			
-						<label for="apt">Numéro d'appartement :</label>
+						<label for="apt">N° d'appartement :</label>
 						<input type="text" class="form-control"  name="apt">
 					</div>
 					<div class="form-group col-md-2">			
@@ -183,17 +171,24 @@ else
 					
 				<div class="form-row">
 					<div class="form-group col-md-6">
-						<label for="langue">Langue parlée:</label>
-						<select name="langue" class="form-control" id="exampleFormControlSelect1">
+						<label for="groupe">Groupe :</label>
+						<select id="selectGroupe" name="id_groupe" class="form-control" id="exampleFormControlSelect1">
+						<option  disabled="disabled" selected="true">Selectionner le groupe...</option>
 EOT;
 							while($row = $result->fetch_assoc())
 							{
-						      echo "<option value=$row[nom]>$row[nom]</option>";
+						      echo "<option value=$row[id]>$row[nom]</option>";
 							}
 echo <<<EOT
 
 					    </select>
 					</div>
+					<div class="form-group col-md-6" id="choix_territoire" style="display: none">
+			    		<label for="selectTerritoire">Territoire du groupe : </label>
+			    		<select name="id_territoireGroupe" class="form-control" id="selectTerritoireGroupe">
+			    	</select>
+
+			    </div>
 				</div>
 			
 				<input type="submit" value="Ajouter adresse">
@@ -211,3 +206,34 @@ function get_post($conn, $var)
 }
 
 ?>
+
+<script type="text/javascript">
+	$("#selectGroupe").change(function(){
+		
+		$id_groupe=$(this).val();
+		
+		$("#choix_territoire").show();
+		
+		$.post("listeTerritoireGroupe.php",{id_groupe:$id_groupe},function(data){
+				$("#selectTerritoireGroupe").html('<option  disabled="disabled" selected="true">Selectionner le territoire...</option>' + data);
+			}
+		);			
+	});
+	
+	$("#selectCongreg").change(function(){
+		
+		$id_congreg=$(this).val();
+
+		$("#choix_territoire").show();
+		
+		$.post("listeTerritoire.php",{id_congreg:$id_congreg},function(data){
+				$("#selectTerritoire").html('<option  disabled="disabled" selected="true">Selectionner le territoire...</option>' + data);
+			}
+		);			
+	});
+
+	$("#selectTerritoire").change(function(){ 
+		$("#btnSubmit").show();
+	});
+
+</script>

@@ -1,9 +1,9 @@
 <?php
+
 	require_once("auth.php");
-  	require_once("header.php");
-  	include("navbar.php");
-
-
+	require_once("header.php");
+	include("navbar.php");
+	
 	if(isset($_GET['ajoutAdresse']))
 	{
 	  require_once("ajoutAdresse.php");

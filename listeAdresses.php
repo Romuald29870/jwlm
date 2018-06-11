@@ -10,7 +10,7 @@
 	$result = $conn->query($query);
 	while($row = $result->fetch_assoc())
 	{					      
-		if($row['langue']!=="")
+		if($row['id_groupe']!==NULL)
 			echo "<del>";
 
 		echo "<div class='row justify-content-md-center'>";
@@ -37,7 +37,7 @@
 
 
     	echo '</div>';
-    	if($row['langue']!=="")
+    	if($row['id_groupe']!==NULL)
 			echo "</del>";
 	}
 
