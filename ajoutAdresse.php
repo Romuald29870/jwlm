@@ -58,8 +58,14 @@ echo <<<EOT
           center: myLatLng
         });
 
-        var ctaLayer = new google.maps.KmlLayer({
-          url: 'https://sites.google.com/site/jwlmbrest/jwlm3.kml',
+        var ctaLayer1 = new google.maps.KmlLayer({
+          url: 'https://sites.google.com/site/jwlmbrest/jwlm_europe.kml',
+          zoom: 1,
+          map: map
+        });
+
+        var ctaLayer2 = new google.maps.KmlLayer({
+          url: 'https://sites.google.com/site/jwlmbrest/jwlm_elorn.kml',
           zoom: 1,
           map: map
         });
@@ -191,7 +197,7 @@ echo <<<EOT
 			    </div>
 				</div>
 			
-				<input type="submit" value="Ajouter adresse">
+				<input id="btnAjouter" type="submit" value="Ajouter adresse" style="display:none">
 			</form>
 	</div>
 </div>
@@ -232,6 +238,10 @@ function get_post($conn, $var)
 		);			
 	});
 
+	$("#selectTerritoireGroupe").change(function(){ 
+		$("#btnAjouter").show();
+	});
+	
 	$("#selectTerritoire").change(function(){ 
 		$("#btnSubmit").show();
 	});
