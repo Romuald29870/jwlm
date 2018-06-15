@@ -4,13 +4,13 @@
 	require_once("login.php");
 ?>
 
+<form action='impressionPdf.php' method='post'>
 <div class="row">
 	<div class="col">
- 		<form action="" method="post" class="col">
 		    <div class="form-row">
 		    	<div class="form-group col-md-6">
 			    	<label for="selectCongreg">Congregation :</label>
-					<select name="congreg" class="form-control" id="selectCongreg">
+					<select name="id_congreg" class="form-control" id="selectCongreg">
 					<option  disabled="disabled" selected="true">Selectionner la congrégation...</option>
 					<?php
 						$query="SELECT * FROM congregation";
@@ -24,19 +24,22 @@
 			    </div>
 			    <div class="form-group col-md-6" id="choix_territoire" style="display: none">
 			    	<label for="selectTerritoire">Territoire : </label>
-			    	<select name="territoire" class="form-control" id="selectTerritoire">
-			    	</select>
-
+			    	<select name="id_territoire" class="form-control" id="selectTerritoire"></select>
 			    </div>
 			</div>
-	    	
-	   </form>
-	   
 	</div>
 </div>
 <div class="row">
-	<div class="col">
-		<div id="result"></div>
+	<div class="col" id="impression" style="display: none">
+			<input id='rd_A5' type='radio' name='format' value='A5' checked/>A5
+			<input id='rd_A6' type='radio' name='format' value='A6'/>A6
+			<input type=submit value='Impression PDF'/>
+	</div>
+</div>
+</form>
+
+<div class="row">
+	<div class="col" id="result">
 	</div>
 </div>
 
@@ -62,13 +65,13 @@ if(isset($_POST['territoire']))
 	echo "<div class='row justify-content-md-center'>";
 	echo "<div class='col-md-6'><h1>Territoire $congreg $territoire</h1></div>";
 	echo "<div class='col-md-6'>";
-		echo "<form action='impressionPdf.php' method='post'>";
-		echo "<input type='hidden' name='congreg' value='$congreg' />";
-		echo "<input type='hidden' name='territoire' value='$territoire' />";
-		echo "format: ";
-		echo "<input id='rd_A5' type='radio' name='format' value='A5' checked/>A5";
-		echo "<input id='rd_A6' type='radio' name='format' value='A6'/>A6";
-		echo "<input type=submit value='Impression PDF'/></form>";
+	echo "<form action='impressionPdf.php' method='post'>";
+	echo "<input type='hidden' name='congreg' value='$congreg' />";
+	echo "<input type='hidden' name='territoire' value='$territoire' />";
+	echo "format: ";
+	echo "<input id='rd_A5' type='radio' name='format' value='A5' checked/>A5";
+	echo "<input id='rd_A6' type='radio' name='format' value='A6'/>A6";
+	echo "<input type=submit value='Impression PDF'/></form>";
 
 	echo "</div>";
 	echo "</div>";
@@ -156,6 +159,7 @@ if(isset($_POST['territoire']))
 
 		$.post("listeAdresses.php",{id_congreg:$id_congreg,id_territoire:$id_territoire},function(data){
 				$("#result").html(data);
+				$("#impression").show();
 			}
 		);
 	});

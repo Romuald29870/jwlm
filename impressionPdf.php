@@ -1,7 +1,16 @@
 <?php
 	require_once("fpdf/fpdf.php");
+	require_once("login.php");
 
+	$id_territoire=$_POST['id_territoire'];
+	$id_congreg=$_POST['id_congreg'];
 	
+	$query = "SELECT nom FROM congregation WHERE id=$id_congreg";
+	//echo $query;
+	$result = $conn->query($query);
+	$row = $result->fetch_assoc();
+	$congreg = $row['nom'];
+	$_POST['congreg']=$congreg;
 
 	class PDF extends FPDF
 	{
@@ -9,7 +18,7 @@
 		function Header()
 		{
 
-			$territoire=$_POST['territoire'];
+			$territoire=$_POST['id_territoire'];
 			$congreg=$_POST['congreg'];
 			$format=$_POST['format'];
 		    // Arial bold 15
@@ -76,12 +85,10 @@
 	//$pdf->SetMargins(5,5,5,5);
 
 
-	require_once("login.php");
 
-	$territoire=$_POST['territoire'];
-	$congreg=$_POST['congreg'];
 
-	$query = "SELECT `id`, `rue`, `numero`, `apt`, `interphone`, `rmq`, `congregation`, `territoire`, `langue` FROM `adresse` WHERE territoire='$territoire' AND congregation='$congreg' ORDER BY 'langue'";
+	$query = "SELECT `id`, `rue`, `numero`, `apt`, `interphone`, `rmq`,  `id_groupe` FROM `adresse` WHERE id_territoire='$id_territoire' AND id_congreg='$id_congreg' ORDER BY 'rue', 'numero'";
+	//echo $query;
 	$result = $conn->query($query);
 
 
@@ -117,7 +124,7 @@
     	$pdf->Cell(12/$ratio,7/$ratio,utf8_decode($row['interphone']),1);
     	$pdf->Cell(12/$ratio,7/$ratio,utf8_decode($row['apt']),1);
     	$pdf->Cell(25/$ratio,7/$ratio,utf8_decode($row['rmq']),1);
-    	if($row['langue']!=""){
+    	if($row['id_groupe']!=""){
     		$x=$pdf->GetX();
     		$y=$pdf->GetY();
     		$pdf->SetLineWidth(0.5);
@@ -136,6 +143,6 @@
 
 
 
-	$pdf->Output("I",$congreg . "_" . $territoire . "_" . $format . ".pdf");
+	$pdf->Output("I",$congreg . "_" . $id_territoire . "_" . $format . ".pdf");
 
 ?>
