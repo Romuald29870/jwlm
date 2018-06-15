@@ -1,7 +1,7 @@
 <?php
 require_once("../login.php");
 
-$langue=$_GET['langue'];
+$id_groupe=$_GET['id_groupe'];
 //$langue='Arabe';
 
 function parseToXML($htmlStr)
@@ -20,7 +20,7 @@ $conn = new mysqli($hn, $un, $pw, $db);
   if($conn->connect_error) die($conn->connect_error);
 
 // Select all the rows in the markers table
-$query = "SELECT * FROM adresse WHERE langue='$langue'";
+$query = "SELECT * FROM adresse WHERE id_groupe='$id_groupe'";
 //echo $query;
 $result = $conn->query($query);
 if (!$result) {

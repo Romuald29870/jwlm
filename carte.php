@@ -1,35 +1,53 @@
+<script src="/js/jquery.js"></script>
+
+<?php
+	require_once("login.php");
+	
+	$query="SELECT * FROM groupe";
+	$result = $conn->query($query);
+
+?>
+
 
 <div class="row">
 	<div class="col">
  		<form action="" method="post" class="col">
 		    <div class="form-row">
 		    	<div class="form-group col-md-6">
-			    	<label for="langue">Langue :</label>
-					<select name="langue" class="form-control" id="exampleFormControlSelect1">
-						<option value="Arabe">Arabe</option>
-						<option value="Espagnol">Espagnol</option>
-						<option value="Mahorais">Mahorais</option>
-						<option value="Malgache">Malgache</option>
-						<option value="Russe">Russe</option>
-					</select>
+			    	<label for="selectGroupe">Groupe de la langue :</label>
+					<select id="selectGroupe" name="id_groupe" class="form-control">
+						<option  disabled="disabled" selected="true">Selectionner le groupe...</option>
+							<?php 
+							while($row = $result->fetch_assoc())
+							{
+							  if(isset($_GET['id_groupe']) && $_GET['id_groupe'] == $row[id])
+							  	echo "<option value=$row[id]  selected='true'>$row[nom]</option>";
+							  else
+							  	echo "<option value=$row[id]>$row[nom]</option>";
+							}
+							?>
+					    </select>
 			    </div>
 			</div>
-	    	
-			<input type="submit" value="Valider">
 	   </form>
 	</div>
 </div>
 
 <?php
 
-if(isset($_POST['langue']))
+if(isset($_GET['id_groupe']))
 {
 
-	require_once("login.php");
-	$langue=$_POST['langue'];
+
+	$id_groupe=$_GET['id_groupe'];
 	$lat="48.4000000" ;
 	$long="-4.4833300";
 	
+	$query = "SELECT nom FROM groupe WHERE id=$id_groupe";
+	$result = $conn->query($query);	
+	$row = $result->fetch_assoc();
+	$langue = $row['nom'];
+		
 	echo <<<EOT
 	<div class="row">
 	<div class='col'><h3>Carte de la langue $langue</h3></div>
@@ -53,7 +71,7 @@ if(isset($_POST['langue']))
           center: myLatLng
         });
 
-		downloadUrl('/bdd/adresses_to_xml.php?langue=$langue', function(data) {
+		downloadUrl('/bdd/adresses_to_xml.php?id_groupe=$id_groupe', function(data) {
             var xml = data.responseXML;
             console.log(xml);
             var markers = xml.documentElement.getElementsByTagName('marker');
@@ -119,70 +137,15 @@ if(isset($_POST['langue']))
     </script>
 
 EOT;
-
-	require_once("login.php");
-	
-	$conn = new mysqli($hn, $un, $pw, $db);
-	if($conn->connect_error) die($conn->connect_error);
-
-	$query = "SELECT `id`, `rue`, `numero`, `apt`, `cp`, `ville`, `langue`, `congregation`, `territoire` FROM `adresse` WHERE langue='$langue'";
-	$result = $conn->query($query);
-
-	if(!$result) echo "<h1>ECHEC DE LECTURE : $query</h1><br>" . $conn->error . "<br><br>";
-
-	echo "<div class='row justify-content-md-center'>";
-	echo "<div class='col-md-12'><h3>Adresses de la langue $langue</h3></div>";
-	echo "</div>";
-	echo "<div class='row justify-content-md-center'>";
-
-	echo "<div class='col-md-1'>";
-	echo "<b>numéro</b>"; 
-	echo "</div>";
-	
-	echo "<div class='col-md-4'>";
-	echo "<b>adresse</b>"; 
-	echo "</div>";
-	
-	echo "<div class='col-md-1'>";
-	echo "<b>Apt</b>"; 
-	echo "</div>";
-	
-	echo "<div class='col-md-3'>";
-	echo "<b>code postal</b>"; 
-	echo "</div>";
-	
-	echo "<div class='col-md-2'>";
-	echo "<b>ville</b>"; 
-	echo "</div>";
-	
-	echo "</div>";
-
-	$result->data_seek(0);
-	while ($row = $result->fetch_assoc()) {
-		echo "<div class='row justify-content-md-center'>";
-		
-		echo "<div class='col-md-1'>";
-    	echo $row['numero']; 
-    	echo "</div>";
-		
-		echo "<div class='col-md-4'>";
-    	echo $row['rue']; 
-    	echo "</div>";
-		
-		echo "<div class='col-md-1'>";
-    	echo $row['apt']; 
-    	echo "</div>";
-		
-		echo "<div class='col-md-3'>";
-    	echo $row['cp']; 
-    	echo "</div>";
-		
-		echo "<div class='col-md-2'>";
-    	echo $row['ville']; 
-    	echo "</div>";
-		
-
-    	echo '</div>';
-    }
 }
+
 ?>
+
+<script type="text/javascript">
+
+	$("#selectGroupe").change(function(){
+		$id_groupe=$(this).val();
+		window.location.replace("?carte&id_groupe="+$id_groupe);			
+	});
+	
+</script>

@@ -171,8 +171,8 @@ else
 					
 				<div class="form-row">
 					<div class="form-group col-md-6">
-						<label for="groupe">Groupe :</label>
-						<select id="selectGroupe" name="id_groupe" class="form-control" id="exampleFormControlSelect1">
+						<label for="selectGroupe">Groupe :</label>
+						<select id="selectGroupe" name="id_groupe" class="form-control">
 						<option  disabled="disabled" selected="true">Selectionner le groupe...</option>
 EOT;
 							while($row = $result->fetch_assoc())
