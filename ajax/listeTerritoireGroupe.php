@@ -1,6 +1,6 @@
 <?php
 
-	require_once("login.php");
+	require_once("../login.php");
 	//print_r($_POST); 
 	$id_groupe=$_POST["id_groupe"];
 	//echo $id_congreg;

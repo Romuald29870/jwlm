@@ -145,7 +145,7 @@ if(isset($_POST['territoire']))
 
 		$("#choix_territoire").show();
 		
-		$.post("listeTerritoire.php",{id_congreg:$id_congreg},function(data){
+		$.post("/ajax/listeTerritoire.php",{id_congreg:$id_congreg},function(data){
 				$("#selectTerritoire").html('<option  disabled="disabled" selected="true">Selectionner le territoire...</option>' + data);
 
 			}
@@ -157,7 +157,7 @@ if(isset($_POST['territoire']))
 		$id_congreg=$("#selectCongreg").val();
 		$id_territoire=$(this).val();
 
-		$.post("listeAdresses.php",{id_congreg:$id_congreg,id_territoire:$id_territoire},function(data){
+		$.post("/ajax/listeAdresses.php",{id_congreg:$id_congreg,id_territoire:$id_territoire},function(data){
 				$("#result").html(data);
 				$("#impression").show();
 			}

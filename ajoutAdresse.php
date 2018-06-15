@@ -214,7 +214,7 @@ function get_post($conn, $var)
 		
 		$("#choix_territoire").show();
 		
-		$.post("listeTerritoireGroupe.php",{id_groupe:$id_groupe},function(data){
+		$.post("ajax/listeTerritoireGroupe.php",{id_groupe:$id_groupe},function(data){
 				$("#selectTerritoireGroupe").html('<option  disabled="disabled" selected="true">Selectionner le territoire...</option>' + data);
 			}
 		);			
@@ -226,7 +226,7 @@ function get_post($conn, $var)
 
 		$("#choix_territoire").show();
 		
-		$.post("listeTerritoire.php",{id_congreg:$id_congreg},function(data){
+		$.post("ajax/listeTerritoire.php",{id_congreg:$id_congreg},function(data){
 				$("#selectTerritoire").html('<option  disabled="disabled" selected="true">Selectionner le territoire...</option>' + data);
 			}
 		);			

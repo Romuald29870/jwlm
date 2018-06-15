@@ -1,6 +1,6 @@
 <?php
 
-	require_once("login.php");
+	require_once("../login.php");
 	//print_r($_POST); 
 	$id_congreg=$_POST["id_congreg"];
 	$id_territoire=$_POST["id_territoire"];
