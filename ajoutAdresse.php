@@ -21,7 +21,7 @@ if(isset($_POST['rue']) & !isset($_POST['territoire']))
 	//$url="https://maps.googleapis.com/maps/api/geocode/json?address=$numero+$rue+$cp+$ville&key=$mapskey";
 	$address=urlencode($numero." ".$rue." ".$cp." ".$ville);
 	$api="https://maps.googleapis.com/maps/api/geocode/json?address=$address&sensor=false&key=$mapskey";
-	//echo $url;
+	//echo $api;
 
 	$arrContextOptions=array(
 	    "ssl"=>array(
@@ -54,21 +54,24 @@ echo <<<EOT
       	var myLatLng = {lat: $lat, lng:$long};
 
         var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 1,
+          zoom: 15,
           center: myLatLng
         });
-
+        
         var ctaLayer1 = new google.maps.KmlLayer({
           url: 'https://sites.google.com/site/jwlmbrest/jwlm_europe.kml',
           zoom: 1,
+          preserveViewport: true,
           map: map
         });
 
         var ctaLayer2 = new google.maps.KmlLayer({
           url: 'https://sites.google.com/site/jwlmbrest/jwlm_elorn.kml',
           zoom: 1,
+          preserveViewport: true,
           map: map
         });
+
 
         var marker = new google.maps.Marker({
     	position: myLatLng,
@@ -76,11 +79,12 @@ echo <<<EOT
     	map: map,
     	title: 'Adresse'
   		});
-
+  		
       }
+      
+      
     </script>
-    <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=$mapskey&callback=initMap">
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=$mapskey&callback=initMap">
     </script>
 	
 	<form action="bdd/saveAddress.php" method="post" class="col-md-6">
@@ -245,5 +249,4 @@ function get_post($conn, $var)
 	$("#selectTerritoire").change(function(){ 
 		$("#btnSubmit").show();
 	});
-
 </script>
