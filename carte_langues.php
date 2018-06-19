@@ -145,7 +145,7 @@ EOT;
 
 	$("#selectGroupe").change(function(){
 		$id_groupe=$(this).val();
-		window.location.replace("?carte&id_groupe="+$id_groupe);			
+		window.location.replace("?carteLangues&id_groupe="+$id_groupe);			
 	});
 	
 </script>

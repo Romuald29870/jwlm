@@ -16,13 +16,21 @@
 	{
 	  require_once("editAdresse.php");
 	}
-	elseif(isset($_GET['territoires']))
+	elseif(isset($_GET['assignAdresse']))
+	{
+	  require_once("assignAdresse.php");
+	}
+	elseif(isset($_GET['imprimTerritoire']))
 	{
 	  require_once("territoires.php");
 	}
-	elseif(isset($_GET['carte']))
+	elseif(isset($_GET['carteTerritoires']))
 	{
-	  require_once("carte.php");
+	  require_once("carte_territoires.php");
+	}
+	elseif(isset($_GET['carteLangues']))
+	{
+	  require_once("carte_langues.php");
 	}
 	else
 	{
