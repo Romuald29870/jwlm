@@ -8,7 +8,7 @@
 	$result = $conn->query($query);
 	while($row = $result->fetch_assoc())
 	{					      
-		echo "<option value=$row[id]>$row[numero]</option>";
+		echo "<option id='optTer-$row[id]' value=$row[id]>$row[numero]</option>";
 	}
 
 ?>

@@ -13,8 +13,7 @@
             <a class="nav-link dropdown-toggle" href="" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Adresses</a>
             <div class="dropdown-menu" aria-labelledby="dropdown01">
               <a class="dropdown-item" href="?ajoutAdresse">Ajouter</a>
-              <a class="dropdown-item" href="?supprAdresse">Suprimer</a>
-              <a class="dropdown-item" href="?modifAdresse">Modifier</a>
+              <a class="dropdown-item" href="?modifAdresse">Modifier/Suprimer</a>
             </div>
           </li>
           <li class="nav-item">

@@ -8,13 +8,13 @@
 	{
 	  require_once("ajoutAdresse.php");
 	}
-	elseif(isset($_GET['supprAdresse']))
-	{
-	  echo "page en cours de construction";
-	}
 	elseif(isset($_GET['modifAdresse']))
 	{
-	  echo "page en cours de construction";
+	  require_once("modifAdresse.php");
+	}
+	elseif(isset($_GET['editAdresse']))
+	{
+	  require_once("editAdresse.php");
 	}
 	elseif(isset($_GET['territoires']))
 	{
