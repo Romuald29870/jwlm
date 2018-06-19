@@ -11,6 +11,15 @@
 	$row = $result->fetch_assoc();
 	$congreg = $row['nom'];
 	$_POST['congreg']=$congreg;
+	
+	$query = "SELECT numero,cite FROM territoire WHERE id=$id_territoire";
+	//echo $query;
+	$result = $conn->query($query);
+	$row = $result->fetch_assoc();
+	$territoire = $row['numero'];
+	$cite = $row['cite'];
+	$_POST['territoire']=$territoire;
+	$_POST['cite']=$cite;
 
 	class PDF extends FPDF
 	{
@@ -18,19 +27,29 @@
 		function Header()
 		{
 
-			$territoire=$_POST['id_territoire'];
+			$territoire=$_POST['territoire'];
 			$congreg=$_POST['congreg'];
+			$cite=$_POST['cite'];
 			$format=$_POST['format'];
 		    // Arial bold 15
-		    if($format=="A5"){
+		    if($format=="A5")
 		    	$ratio=1;
-			    $this->SetFont('Arial','B',12);
-			    $this->Cell(60,10,"Congregation : $congreg ",1);
-				$this->Cell(40,10,"Territoire : $territoire",1);
-				$this->Cell(30,10,"Date : ",1);
-			    $this->Ln();
-			    $this->Ln();
-			}
+		    else
+		    	$ratio=1.5;
+		    	
+		    $line_height = 7/$ratio;
+		    
+			$this->SetFont('Arial','B',10/$ratio);
+			if($cite)
+			    $this->Cell(130/$ratio,$line_height,"FICHE D'ABSENTS",1,1,'C');
+			else
+			    $this->Cell(130/$ratio,$line_height,"A NE PAS VISITER",1,1,'C');
+			$this->Cell(60/$ratio,$line_height,"Congregation : $congreg ",1);
+			$this->Cell(40/$ratio,$line_height,"Territoire : $territoire",1);
+			$this->Cell(30/$ratio,$line_height,"Date : ",1,1);
+			$this->Ln();
+			
+			/*}
 			else
 			{
 				$ratio=1.5;
@@ -40,7 +59,7 @@
 				$this->Cell(21,7,"Date : ",1);
 			    $this->Ln();
 			    $this->Ln();
-			}
+			}*/
 			   
 			$this->Cell(12/$ratio,7/$ratio,"Num",1);
 			$this->Cell(69/$ratio,7/$ratio,"Rue",1);
@@ -124,7 +143,7 @@
     	$pdf->Cell(12/$ratio,7/$ratio,utf8_decode($row['interphone']),1);
     	$pdf->Cell(12/$ratio,7/$ratio,utf8_decode($row['apt']),1);
     	$pdf->Cell(25/$ratio,7/$ratio,utf8_decode($row['rmq']),1);
-    	if($row['id_groupe']!=""){
+    	if($row['id_groupe']!="" && $cite){
     		$x=$pdf->GetX();
     		$y=$pdf->GetY();
     		$pdf->SetLineWidth(0.5);
