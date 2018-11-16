@@ -106,7 +106,7 @@
 
 
 
-	$query = "SELECT `id`, `rue`, `numero`, `apt`, `interphone`, `rmq`,  `id_groupe` FROM `adresse` WHERE id_territoire='$id_territoire' AND id_congreg='$id_congreg' ORDER BY 'rue', 'numero'";
+	$query = "SELECT `id`, `rue`, `numero`, `apt`, `interphone`, `rmq`,  `id_groupe` FROM `adresse` WHERE id_territoire='$id_territoire' AND id_congreg='$id_congreg' ORDER BY 'rue', 'numero', 'interphone', 'apt'";
 	//echo $query;
 	$result = $conn->query($query);
 
@@ -126,7 +126,13 @@
 			$rue="";
 			$num="";
 		}
-		else{
+		else
+		{
+			if($nb_ligne>1)
+			{
+				$nb_ligne=1;
+				$pdf->AddPage();
+			}
 			$rue=$row['rue'];
 			$num=$row['numero'];
 		}
@@ -142,7 +148,6 @@
     	$pdf->Cell(69/$ratio,7/$ratio,utf8_decode($rue),1);
     	$pdf->Cell(12/$ratio,7/$ratio,utf8_decode($row['interphone']),1);
     	$pdf->Cell(12/$ratio,7/$ratio,utf8_decode($row['apt']),1);
-    	$pdf->Cell(25/$ratio,7/$ratio,utf8_decode($row['rmq']),1);
     	if($row['id_groupe']!="" && $cite){
     		$x=$pdf->GetX();
     		$y=$pdf->GetY();
@@ -153,6 +158,8 @@
     		$pdf->SetDrawColor(0,0,0);
     		$pdf->SetLineWidth(0.3);
     	}
+    	$pdf->Cell(25/$ratio,7/$ratio,utf8_decode($row['rmq']),1);
+    	
     	$pdf->Ln();
 
     	$prev_rue=$row['rue'];

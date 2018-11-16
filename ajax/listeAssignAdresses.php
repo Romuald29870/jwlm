@@ -8,10 +8,31 @@
 	$query = "SELECT * FROM `adresse` WHERE id_territoire=$id_territoire AND id_congreg=$id_congreg ORDER BY rue, numero, interphone ASC";
 
 	$result = $conn->query($query);
+	
+	
+	echo "<div class='row justify-content-md-center'>";
+		
+		echo "<div class='col-md-1'><strong>N°</strong></div>";
+		
+		echo "<div class='col-md-3'><strong>Rue</strong></div>";
+		
+		echo "<div class='col-md-1'><strong>Inter</strong></div>";
+		
+		echo "<div class='col-md-1'><strong>Apt</strong></div>";
+		
+		echo "<div class='col-md-1'><strong>Rmq</strong></div>";
+		
+		echo "<div class='col-md-2'><strong>Groupe</strong></div>";
+		
+		echo "<div class='col-md-2'><strong>Territoire</strong></div>";
+
+	echo '</div>';
+    	
+    	
 	while($row = $result->fetch_assoc())
 	{					      
 
-		echo "<div class='row justify-content-md-center'>";
+		echo "<div class='row justify-content-md-center border'>";
 		
 		echo "<div class='col-md-1'>";
     	echo $row['numero']; 
@@ -83,7 +104,7 @@
 		id_groupe=$(this).val();
 		
 		$.post("ajax/assignGroupe.php",{id_groupe:id_groupe,id_adresse:id_adresse},function(data){
-			alert(data);
+			//alert(data);
 		});
 		
 		$.post("ajax/listeTerritoireGroupe.php",{id_groupe:id_groupe},function(data){

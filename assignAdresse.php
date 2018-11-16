@@ -32,6 +32,7 @@
 </form>
 
 <div class="row">
+	<img id="ajax-loading" src="img/patienter.gif" alt="Loading" style="display: none"/>
 	<div class="col" id="result">
 	</div>
 </div>
@@ -55,8 +56,12 @@
 		
 		$id_congreg=$("#selectCongreg").val();
 		$id_territoire=$(this).val();
+		$("#result").hide();
+		$("#ajax-loading").show();
 
 		$.post("/ajax/listeAssignAdresses.php",{id_congreg:$id_congreg,id_territoire:$id_territoire},function(data){
+				$("#ajax-loading").hide();
+				$("#result").show();
 				$("#result").html(data);
 				$("#impression").show();
 			}
