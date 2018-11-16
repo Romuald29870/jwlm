@@ -169,6 +169,6 @@
 
 
 
-	$pdf->Output("I",$congreg . "_" . $id_territoire . "_" . $format . ".pdf");
+	$pdf->Output("I",$congreg . "_" . $territoire . "_" . $format . ".pdf");
 
 ?>
