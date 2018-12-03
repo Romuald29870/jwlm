@@ -5,7 +5,7 @@
 	$id_congreg=$_POST["id_congreg"];
 	$id_territoire=$_POST["id_territoire"];
 	//echo $id_congreg;
-	$query = "SELECT * FROM `adresse` WHERE id_territoire=$id_territoire AND id_congreg=$id_congreg ORDER BY rue, numero, interphone ASC";
+	$query = "SELECT * FROM `adresse` WHERE id_territoire=$id_territoire AND id_congreg=$id_congreg ORDER BY rue, numero, LENGTH(interphone), interphone, LENGTH(apt), apt ASC";
 
 	$result = $conn->query($query);
 	if ($result->num_rows==0)

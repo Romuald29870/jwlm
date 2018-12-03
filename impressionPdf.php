@@ -62,10 +62,10 @@
 			}*/
 			   
 			$this->Cell(12/$ratio,7/$ratio,"Num",1);
-			$this->Cell(69/$ratio,7/$ratio,"Rue",1);
-			$this->Cell(12/$ratio,7/$ratio,"Inter",1);
-			$this->Cell(12/$ratio,7/$ratio,"Porte",1);
-			$this->Cell(25/$ratio,7/$ratio,"Remarque",1);
+			$this->Cell(78/$ratio,7/$ratio,"Rue",1);
+			$this->Cell(20/$ratio,7/$ratio,"Inter",1);
+			$this->Cell(20/$ratio,7/$ratio,"Porte",1);
+			//$this->Cell(25/$ratio,7/$ratio,"Remarque",1);
 			$this->Ln();
 		}
 
@@ -106,7 +106,7 @@
 
 
 
-	$query = "SELECT `id`, `rue`, `numero`, `apt`, `interphone`, `rmq`,  `id_groupe` FROM `adresse` WHERE id_territoire='$id_territoire' AND id_congreg='$id_congreg' ORDER BY 'rue', 'numero', 'interphone', 'apt'";
+	$query = "SELECT `id`, `rue`, `numero`, `apt`, `interphone`, `rmq`,  `id_groupe` FROM `adresse` WHERE id_territoire='$id_territoire' AND id_congreg='$id_congreg' ORDER BY rue, numero, LENGTH(interphone), interphone, LENGTH(apt), apt ASC";
 	//echo $query;
 	$result = $conn->query($query);
 
@@ -145,20 +145,20 @@
 
 
     	$pdf->Cell(12/$ratio,7/$ratio,utf8_decode($num),1);
-    	$pdf->Cell(69/$ratio,7/$ratio,utf8_decode($rue),1);
-    	$pdf->Cell(12/$ratio,7/$ratio,utf8_decode($row['interphone']),1);
-    	$pdf->Cell(12/$ratio,7/$ratio,utf8_decode($row['apt']),1);
+    	$pdf->Cell(78/$ratio,7/$ratio,utf8_decode($rue),1);
+    	$pdf->Cell(20/$ratio,7/$ratio,utf8_decode($row['interphone']),1);
+    	$pdf->Cell(20/$ratio,7/$ratio,utf8_decode($row['apt']),1);
     	if($row['id_groupe']!="" && $cite){
     		$x=$pdf->GetX();
     		$y=$pdf->GetY();
     		$pdf->SetLineWidth(0.5);
     		$pdf->SetDrawColor(96,96,96);
-    		$pdf->Line($x,$y+3.3/$ratio,10+81/$ratio,$y+3.3/$ratio);
+    		$pdf->Line($x,$y+3.3/$ratio,10+90/$ratio,$y+3.3/$ratio);
     		
     		$pdf->SetDrawColor(0,0,0);
     		$pdf->SetLineWidth(0.3);
     	}
-    	$pdf->Cell(25/$ratio,7/$ratio,utf8_decode($row['rmq']),1);
+    	//$pdf->Cell(25/$ratio,7/$ratio,utf8_decode($row['rmq']),1);
     	
     	$pdf->Ln();
 
